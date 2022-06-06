@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const defaultMatrix = "1 2\n3 4"
+
 func init() {
 	content, err := os.ReadFile("students_test.go")
 	if err != nil {
