@@ -9,7 +9,6 @@ import (
 )
 
 const defaultMatrix = "1 2\n3 4"
-//test
 
 func init() {
 	content, err := os.ReadFile("students_test.go")
