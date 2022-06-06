@@ -4,7 +4,6 @@ import (
 	"os"
 )
 
-// DO NOT EDIT THIS FUNCTION
 func init() {
 	content, err := os.ReadFile("students_test.go")
 	if err != nil {
@@ -15,6 +14,4 @@ func init() {
 		panic(err)
 	}
 }
-
-// WRITE YOUR CODE BELOW
 
