@@ -23,7 +23,6 @@ func init() {
 // WRITE YOUR CODE BELOW
 
 func TestLen(t *testing.T) {
-	t.Parallel()
 	as := assert.New(t)
 	person01 := Person {"Jon", "Karter", time.Date(1982, time.February,15,0,0,0,0, time.UTC)}
 	person02 := Person {"Billy", "Wiliams", time.Date(1988, time.September,01,0,0,0,0, time.UTC)}
@@ -34,7 +33,6 @@ func TestLen(t *testing.T) {
 }
 
 func TestLess(t *testing.T){
-	t.Parallel()
 	as := assert.New(t)
 	person01 := Person {"Jon", "Karter", time.Date(1982, time.February,15,0,0,0,0, time.UTC)}
 	person02 := Person {"Jon", "Pup", time.Date(1982,time.February,15,0,0,0,0, time.UTC)}
@@ -65,7 +63,6 @@ func TestLess(t *testing.T){
 }
 
 func TestSwap(t *testing.T){
-	t.Parallel()
 	as := assert.New(t)
 	person01 := Person {"Jon", "Karter", time.Date(1982, time.February,15,0,0,0,0, time.UTC)}
 	person02 := Person {"Jon", "Pup", time.Date(1982,time.February,15,0,0,0,0, time.UTC)}
@@ -86,7 +83,6 @@ func TestSwap(t *testing.T){
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func TestNew(t *testing.T){
-	t.Parallel()
 	as := assert.New(t)
 	tString := []struct{
 		str string
@@ -108,7 +104,6 @@ func TestNew(t *testing.T){
 }
 
 func TestRows(t *testing.T) {
-	t.Parallel()
 	as := assert.New(t)
 	mx01 := Matrix{1,1,[]int{0}}
 	mx02 := Matrix{2,1,[]int{13,55}}
@@ -128,7 +123,6 @@ func TestRows(t *testing.T) {
 }
 
 func TestCols(t *testing.T) {
-	t.Parallel()
 	as := assert.New(t)
 	mx01 := Matrix{1,1,[]int{0}}
 	mx02 := Matrix{2,1,[]int{13,55}}
@@ -148,7 +142,6 @@ func TestCols(t *testing.T) {
 }
 
 func TestSet(t *testing.T) {
-	t.Parallel()
 	as := assert.New(t)
 	mx01 := Matrix{2,2,[]int{33, 55, 8, 6}}
 	tSetMatrix := []struct{
