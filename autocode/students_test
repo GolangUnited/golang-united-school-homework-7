@@ -2,6 +2,10 @@ package coverage
 
 import (
 	"os"
+	"time"
+	"testing"
+	"fmt"
+	"strconv"
 )
 
 // DO NOT EDIT THIS FUNCTION
@@ -17,4 +21,193 @@ func init() {
 }
 
 // WRITE YOUR CODE BELOW
+// Part 1
+var p = People {
+	Person {
+		firstName: "john",
+		lastName: "johnson",
+		birthDay: time.Date(2021, time.Month(1), 22, 3, 20, 30, 0, time.UTC),
+	},
+	Person {
+		firstName: "nick",
+		lastName: "nickson",
+		birthDay: time.Date(2002, time.Month(1), 22, 3, 20, 30, 0, time.UTC),
+	},
+	Person {
+		firstName: "nick3",
+		lastName: "nickson3",
+		birthDay: time.Date(2002, time.Month(1), 22, 3, 20, 30, 0, time.UTC),
+	},
+}
 
+func equals(p1, p2 Person) bool {
+	return p1.birthDay.Unix() == p2.birthDay.Unix() &&
+			p1.firstName == p2.firstName &&
+			p1.lastName == p2.lastName
+}
+
+func TestOne(t *testing.T) {
+	type testCase struct {
+		peopleSlice People
+		expectedLen int
+		expectedLess []bool
+	}
+
+	tData := []testCase {
+		testCase {
+			peopleSlice: p,
+			expectedLen: 3,
+			expectedLess: []bool{true, false, true, false, false, false},
+		},
+	}
+
+	for k, v := range tData {
+		res := v.peopleSlice.Len()
+
+		// Len test
+		if res != v.expectedLen {
+			t.Errorf("[%d] expected: %d, got %d", k, v.expectedLen, res)
+		}
+
+		// Less test
+		index := 0
+		prevI := Person{}
+		prevJ := Person{}
+
+		for i := 0; i < v.peopleSlice.Len(); i++ {
+			for j := i+1; j < v.peopleSlice.Len(); j++ {
+				res2 := v.peopleSlice.Less(i, j)
+				res2swap := v.peopleSlice.Less(j, i)
+				if res2 != v.expectedLess[index] {
+					t.Errorf("[%d-%d] expected: %t, got %t", i, j, v.expectedLess[index], res2)
+				}
+				if res2swap != v.expectedLess[index+1] {
+					t.Errorf("[%d-%d] expected: %t, got %t", i, j, v.expectedLess[index+1], res2swap)
+				}
+				index+=2
+
+				// Swap test
+				prevI = v.peopleSlice[i]
+				prevJ = v.peopleSlice[j]
+				v.peopleSlice.Swap(i, j)
+
+				if !equals(v.peopleSlice[i], prevJ) {
+					t.Errorf("[%d-%d] didn't swap", i, j)
+				}
+				if !equals(v.peopleSlice[j], prevI) {
+					t.Errorf("[%d-%d] didn't swap", i, j)
+				}
+			}
+			index = 0
+		}
+	}
+}
+
+// Part 2
+type testCase2 struct {
+	matrixString string
+	expectedNew Matrix
+	expectedRows [][]int
+	expectedCols [][]int
+	setInput [][]int
+}
+
+var testData2 = []testCase2 {
+	testCase2 {
+		matrixString: "2 3\n5 1",
+		expectedNew: Matrix {
+			rows: 2,
+			cols: 2,
+			data: []int{2,3,5,1},
+		},
+		expectedRows: [][]int{{2,3},{5,1}},
+		expectedCols: [][]int{{2,5},{3,1}},
+		setInput: [][]int {
+			[]int {1, 1, 0},
+			[]int {-1, -1, 0},
+		},
+	},
+	testCase2 {
+		matrixString: "2 4 6\n1 8 4",
+		expectedNew: Matrix {
+			rows: 2,
+			cols: 3,
+			data: []int{2,4,6,1,8,4},
+		},
+		expectedRows: [][]int{{2,4,6},{1,8,4}},
+		expectedCols: [][]int{{2,1},{4,8},{6,4}},
+		setInput: [][]int {
+			[]int {1, 4, 0},
+			[]int {-1, -1, 0},
+		},
+
+	},
+	testCase2 {
+		matrixString: "2 3\n5 a",
+	},
+	testCase2 {
+		matrixString: "7 8\n2 6 1",
+	},
+}
+
+func TestTwo(t *testing.T) {
+	for i, v := range testData2 {
+		resultMatrix, err := New(v.matrixString)
+		if err == nil {
+			if !equalMatrix(*resultMatrix, v.expectedNew) {
+				t.Errorf("[%d] - expected: %d, got: %d", i, v.expectedNew, resultMatrix)
+			} else {
+				if !equalMatrices(resultMatrix.Rows(), v.expectedRows) {
+					t.Errorf("[%d] - expected: %d, got: %d", i, v.expectedRows, resultMatrix.Rows())
+				}
+				if !equalMatrices(resultMatrix.Cols(), v.expectedCols) {
+					t.Errorf("[%d] - expected: %d, got: %d", i, v.expectedCols, resultMatrix.Cols())
+				}
+
+				for _, v2 := range v.setInput {
+					res := resultMatrix.Set(v2[0], v2[1], v2[2])
+					if res {
+						if resultMatrix.data[v2[0]*resultMatrix.cols+v2[1]] != v2[2] {
+							t.Errorf("problem setting the value %d\n", v2[2])
+						}
+					} else {
+						fmt.Errorf("problem setting the value %d\n", v2[2])
+					}
+				}
+			}
+		} else {
+			if err != fmt.Errorf("Rows need to be the same length") {
+				fmt.Errorf("Invalid error")
+			}
+			switch t := err.(type) {
+			case *strconv.NumError:
+			default:
+				fmt.Errorf("Invalid error type %T", t)
+			}
+			
+		} 
+	}
+}
+
+func equalMatrix(a, b Matrix) bool {
+	if a.rows == b.rows && a.cols == b.cols {
+		for i := 0; i < len(a.data); i++ {
+			if a.data[i] != b.data[i] {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
+func equalMatrices(a, b [][]int) bool {
+	for i := 0; i < len(a); i++ {
+		for j := 0; j < len(a[i]); j++ {
+			if a[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
